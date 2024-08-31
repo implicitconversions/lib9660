@@ -108,10 +108,13 @@ typedef struct {
     l9660_luint32       path_table_opt_le;
     l9660_buint32       path_table_be;
     l9660_buint32       path_table_opt_be;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wgnu-variable-sized-type-not-at-end"
     union {
         l9660_dirent    root_dir_ent;
         char            pad3[34];
     };
+#pragma GCC diagnostic pop
     char                volume_set_id[128];
     char                data_preparer_id[128];
     char                app_id[128];
