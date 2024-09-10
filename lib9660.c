@@ -84,9 +84,11 @@ static inline uint32_t fnextsectpos(l9660_file *f)
 
 l9660_status l9660_openfs(
     l9660_fs *fs,
-    bool (*read_sector)(l9660_fs *fs, void *buf, uint32_t sector))
+    bool (*read_sector)(l9660_fs *fs, void *buf, uint32_t sector, void* context),
+    void* context)
 {
     fs->read_sector = read_sector;
+    fs->ctx = context;
 
 #ifndef L9660_SINGLEBUFFER
     l9660_vdesc_primary *pvd = PVD(&fs->pvd);
@@ -97,7 +99,7 @@ l9660_status l9660_openfs(
     uint32_t idx = 0x10;
     for (;;) {
         // Read next sector
-        if (!read_sector(fs, pvd, idx))
+        if (!read_sector(fs, pvd, idx, context))
             return L9660_EIO;
 
         // Validate magic
@@ -139,7 +141,7 @@ static l9660_status buffer(l9660_file *f)
 #ifdef L9660_SINGLEBUFFER
     last_file = f;
 #endif
-    if (!f->fs->read_sector(f->fs, BUF(f), f->first_sector + f->position / 2048))
+    if (!f->fs->read_sector(f->fs, BUF(f), f->first_sector + f->position / 2048, f->fs->ctx))
         return L9660_EIO;
     else
         return L9660_OK;

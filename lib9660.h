@@ -158,7 +158,10 @@ typedef struct l9660_fs {
 #endif
 
     /* read_sector func */
-    bool (*read_sector)(struct l9660_fs *fs, void *buf, uint32_t sector);
+    bool (*read_sector)(struct l9660_fs *fs, void *buf, uint32_t sector, void* callback);
+
+    /* context to be passed to the read_sector function */
+    void* ctx;
 } l9660_fs;
 
 typedef struct {
@@ -180,7 +183,8 @@ typedef struct {
 /* Open a file system, initialising *fs. */
 l9660_status l9660_openfs(
     l9660_fs *fs,
-    bool (*read_sector)(l9660_fs *fs, void *buf, uint32_t sector));
+    bool (*read_sector)(l9660_fs *fs, void *buf, uint32_t sector, void* context),
+    void* context);
 
 /*void l9660_closefs(l9660_fs *fs); (nop) */
 

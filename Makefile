@@ -8,6 +8,7 @@ CFLAGS = -DL9660_HAVE_STDIO -g -DDEBUG
 
 OBJS := lib9660.o
 ALL  := lib9660.a tb9660
+CC   := clang
 
 all: $(ALL)
 

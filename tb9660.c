@@ -25,7 +25,7 @@ l9660_fs   fs;
 l9660_dir  dir;
 l9660_file file;
 
-static bool readsect(l9660_fs *fs, void *buf, uint32_t sector)
+static bool readsect(l9660_fs *fs, void *buf, uint32_t sector, void* context)
 {
     if (fseek(isof, 2048 * sector, SEEK_SET)) {
         fprintf(stderr, "Reading sector %u\n", sector);
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    check(l9660_openfs(&fs, readsect), "openfs");
+    check(l9660_openfs(&fs, readsect, NULL), "openfs");
     check(l9660_fs_open_root(&dir, &fs), "fs_open_root");
 
     if (strcmp(argv[2], "ls") == 0) {
